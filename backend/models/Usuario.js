@@ -22,7 +22,7 @@ const usuarioSchema = mongoose.Schema(
     token: {
       type: String,
     },
-    consfirmado: {
+    confirmado: {
       type: Boolean,
       default: false,
     },
@@ -41,6 +41,11 @@ usuarioSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+//Comprobar el password //Esta funcion retorna TRUE OR FALSE
+usuarioSchema.methods.comprobarPassword = async function (passwordFormulario) {
+  return await bcrypt.compare(passwordFormulario, this.password);
+};
 
 const Usuario = mongoose.model("Usuario", usuarioSchema);
 export default Usuario;
