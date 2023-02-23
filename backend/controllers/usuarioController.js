@@ -6,7 +6,7 @@ import e from "express";
 //Registrando usuario y almacenando en la base de datos
 const registrar = async (req, res) => {
   //Evitar registros duplicados
-  const { email } = req.body;
+  const { email } = req.body; // req.body extrae los valores del formulario
   const existeUsuario = await Usuario.findOne({ email }); //Encuentra el primero que coincida con el email
 
   if (existeUsuario) {
@@ -58,7 +58,8 @@ const autenticar = async (req, res) => {
 
 //Confirmar Cuenta de Usuario
 const confirmar = async (req, res) => {
-  const { token } = req.params; //token es la variable generada para el routing dinamico
+  //token es la variable generada para el routing dinamico //req.params extrae token de la url
+  const { token } = req.params;
   const usuarioConfirmar = await Usuario.findOne({ token });
   if (!usuarioConfirmar) {
     const error = new Error("Token no válido");
@@ -75,4 +76,60 @@ const confirmar = async (req, res) => {
   }
 };
 
-export { registrar, autenticar, confirmar };
+//Olvide Password
+const olvidePassword = async (req, res) => {
+  const { email } = req.body;
+
+  //Comprobar si el usuario existe
+  const usuario = await Usuario.findOne({ email });
+  if (!usuario) {
+    const error = new Error("El usuario no existe!");
+    return res.status(404).json({ msg: error.message });
+  }
+
+  try {
+    usuario.token = generarId();
+    await usuario.save();
+    res.json({ msg: "Hemos enviado un email con las instrucciones!" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Comprobar Token
+const comprobarToken = async (req, res) => {
+  const { token } = req.params;
+
+  const tokenValido = await Usuario.findOne({ token });
+
+  if (tokenValido) {
+    res.json({ msg: "Token válido y el usuario existe!" });
+  } else {
+    const error = new Error("Token no válido!");
+    return res.status(404).json({ msg: error.message });
+  }
+};
+
+//Nuevo Password
+const nuevoPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const usuario = await Usuario.findOne({ token });
+
+  if (usuario) {
+    res.json({ msg: "Token válido y el usuario existe!" });
+  } else {
+    const error = new Error("Token no válido!");
+    return res.status(404).json({ msg: error.message });
+  }
+};
+
+export {
+  registrar,
+  autenticar,
+  confirmar,
+  olvidePassword,
+  comprobarToken,
+  nuevoPassword,
+};
