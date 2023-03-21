@@ -9,7 +9,10 @@ import {
   olvidePassword,
   comprobarToken,
   nuevoPassword,
+  perfil,
 } from "../controllers/usuarioController.js";
+
+import checkAuth from "../middleware/checkAuth.js";
 
 //Autenticacion, Registro y Confirmacion de Usuarios
 //Crea un nuevo usuario
@@ -32,5 +35,7 @@ router.post("/olvide-password", olvidePassword);
 
 //Es lo mismo que los dos anteriores, es la forma que se debe de utilizar cuando tenemos un mismo endpoint con diferentes funciones
 router.route("/olvide-password/:token").get(comprobarToken).post(nuevoPassword);
+
+router.get("/perfil", checkAuth, perfil);
 
 export default router;

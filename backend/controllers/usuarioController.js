@@ -124,6 +124,14 @@ const nuevoPassword = async (req, res) => {
   }
 };
 
+//Perfil del Usuario, estos datos se obtienen desde el servidor despues de verificar el usuario con el middleware checkAuth
+const perfil = async (req, res) => {
+  //leyendo estos datos desde el servidor despues que se autenticó el usuario
+  const { usuario } = req;
+
+  res.json(usuario);
+};
+
 export {
   registrar,
   autenticar,
@@ -131,4 +139,5 @@ export {
   olvidePassword,
   comprobarToken,
   nuevoPassword,
+  perfil,
 };
