@@ -1,7 +1,6 @@
 import Usuario from "../models/Usuario.js";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
-import e from "express";
 
 //Registrando usuario y almacenando en la base de datos
 const registrar = async (req, res) => {

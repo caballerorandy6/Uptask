@@ -12,7 +12,6 @@ import {
 } from "../controllers/usuarioController.js";
 
 //Autenticacion, Registro y Confirmacion de Usuarios
-
 //Crea un nuevo usuario
 router.post("/", registrar);
 
