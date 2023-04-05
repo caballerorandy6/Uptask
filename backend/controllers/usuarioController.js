@@ -17,8 +17,10 @@ const registrar = async (req, res) => {
   try {
     const usuario = new Usuario(req.body); //Crea un objeto de tipo usuario
     usuario.token = generarId(); //Generando un Id unico
-    const usuarioAlmacenado = await usuario.save(); //Almacena el usuario en la BD
-    res.json(usuarioAlmacenado); //Retorna el usuario almacenado
+    await usuario.save(); //const usuarioAlmacenado = await usuario.save(); Almacena el usuario en la BD
+    res.json({
+      msg: "Usuario creado correctamente. Revisa tu email para confirmar tu cuenta.",
+    }); //res.json(usuarioAlmacenado); //Retorna el usuario almacenado
   } catch (error) {
     console.log(error);
   }
