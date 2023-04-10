@@ -1,6 +1,7 @@
 import Usuario from "../models/Usuario.js";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
+import { emailRegistro } from "../helpers/emails.js";
 
 //Registrando usuario y almacenando en la base de datos
 const registrar = async (req, res) => {
@@ -18,6 +19,16 @@ const registrar = async (req, res) => {
     const usuario = new Usuario(req.body); //Crea un objeto de tipo usuario
     usuario.token = generarId(); //Generando un Id unico
     await usuario.save(); //const usuarioAlmacenado = await usuario.save(); Almacena el usuario en la BD
+
+    //Enviar el email de confirmacion
+    const { email, nombre, token } = usuario;
+
+    emailRegistro({
+      email,
+      nombre,
+      token,
+    });
+
     res.json({
       msg: "Usuario creado correctamente. Revisa tu email para confirmar tu cuenta.",
     }); //res.json(usuarioAlmacenado); //Retorna el usuario almacenado
@@ -66,12 +77,12 @@ const confirmar = async (req, res) => {
     const error = new Error("Token no válido");
     return res.status(403).json({ msg: error.message });
   }
+
   try {
     usuarioConfirmar.confirmado = true;
     usuarioConfirmar.token = "";
     await usuarioConfirmar.save();
     res.json({ msg: "Usuario confirmado correctamente!" });
-    console.log(usuarioConfirmar);
   } catch (error) {
     console.log(error);
   }

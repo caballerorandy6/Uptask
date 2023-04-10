@@ -10,6 +10,20 @@ const Registrar = () => {
   const [repetirPassword, setRepetirPassword] = useState("");
   const [alerta, setAlerta] = useState({});
 
+  //Eliminar mensaje
+  const eliminarAlerta = () => {
+    setTimeout(() => {
+      setAlerta({ msg: "", error: false });
+    }, 3000);
+  };
+
+  const resetearFormulario = () => {
+    setNombre("");
+    setEmail("");
+    setPassword("");
+    setRepetirPassword("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if ([nombre, email, password, repetirPassword].includes("")) {
@@ -17,6 +31,7 @@ const Registrar = () => {
         msg: "Todos los campos son obligatorios!",
         error: true,
       });
+      eliminarAlerta();
       return;
     }
 
@@ -25,6 +40,7 @@ const Registrar = () => {
         msg: "Los Passwords no coinciden!",
         error: true,
       });
+      eliminarAlerta();
       return;
     }
 
@@ -33,10 +49,9 @@ const Registrar = () => {
         msg: "El Password es muy corto, agrega minimo 6 caracteres!",
         error: true,
       });
+      eliminarAlerta();
       return;
     }
-
-    setAlerta({});
 
     //Crear el usuario en la API
     try {
@@ -54,17 +69,15 @@ const Registrar = () => {
         error: false,
       });
 
-      setNombre("");
-      setEmail("");
-      setPassword("");
-      setRepetirPassword("");
+      eliminarAlerta();
 
-      console.log(data);
+      resetearFormulario(); //Reseteando los inputs del formulario
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg, //mostrando el mensaje de error cuando hay un error en el request
         error: true,
       });
+      eliminarAlerta();
     }
   };
 
