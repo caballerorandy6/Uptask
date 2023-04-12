@@ -136,7 +136,14 @@ const nuevoPassword = async (req, res) => {
   const usuario = await Usuario.findOne({ token });
 
   if (usuario) {
-    res.json({ msg: "Token válido y el usuario existe!" });
+    usuario.password = password;
+    usuario.token = "";
+    try {
+      await usuario.save();
+      res.json({ msg: "Password Modificado Correctamente!" });
+    } catch (error) {
+      console.log(error);
+    }
   } else {
     const error = new Error("Token no válido!");
     return res.status(404).json({ msg: error.message });

@@ -12,6 +12,8 @@ import OlvidePassword from "./pages/OlvidePassword";
 import NuevoPassword from "./pages/NuevoPassword";
 import ConfirmarCuenta from "./pages/ConfirmarCuenta";
 
+import { AuthProvider } from "./context/AuthProvider";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<AuthLayout />}>
@@ -25,7 +27,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />;
+    </AuthProvider>
+  );
 }
 
 export default App;
