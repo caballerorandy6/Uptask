@@ -17,17 +17,10 @@ const ConfirmarCuenta = () => {
         const url = `/usuarios/confirmar/${id}`;
         const { data } = await clienteAxios(url);
 
-        setAlerta({
-          msg: data.msg,
-          error: false,
-        });
-
+        setAlerta({ msg: data.msg, error: false });
         setCuentaConfirmada(true);
       } catch (error) {
-        setAlerta({
-          msg: error.response.data.msg,
-          error: true,
-        });
+        setAlerta({ msg: error.response.data.msg, error: true });
       }
     };
     confirmarCuenta();

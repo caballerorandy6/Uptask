@@ -1,10 +1,14 @@
 import { useState, useEffect, createContext } from "react";
 import clienteAxios from "../config/clienteAxios";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
+  const [cargando, setCargando] = useState(true);
+
+  const navigate = useNavigate();
 
   //Comprueba si hay un token, si lo hay lo envia a la api y autentica al usuario
   useEffect(() => {
@@ -12,6 +16,7 @@ const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
 
       if (!token) {
+        setCargando(false);
         return;
       }
 
@@ -25,13 +30,19 @@ const AuthProvider = ({ children }) => {
       try {
         const { data } = await clienteAxios(`/usuarios/perfil`, config);
         setAuth(data);
-      } catch (error) {}
+        navigate("/proyectos");
+      } catch (error) {
+        setAuth({});
+      }
+      setCargando(false);
     };
     autenticarUsuario();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ setAuth }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ auth, setAuth, cargando }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
