@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import clienteAxios from "../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ProyectosContext = createContext();
 
@@ -9,6 +10,7 @@ const ProyectosProvider = ({ children }) => {
   const [alerta, setAlerta] = useState([]);
   const [proyecto, setProyecto] = useState({});
   const [cargando, setCargando] = useState(false);
+  const [modalFormularioTarea, setmodalFormularioTarea] = useState(false);
 
   const navigate = useNavigate();
 
@@ -169,6 +171,31 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  //Mostrar Modal para el Formulario Tarea
+  const handleModalTarea = () => {
+    setmodalFormularioTarea(!modalFormularioTarea);
+  };
+
+  //Submit nueva tarea
+  const submitTarea = async (tarea) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post("/tareas", tarea, config);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -180,6 +207,9 @@ const ProyectosProvider = ({ children }) => {
         proyecto,
         cargando,
         eliminarProyecto,
+        modalFormularioTarea,
+        handleModalTarea,
+        submitTarea,
       }}
     >
       {children}

@@ -26,6 +26,14 @@ const proyectoSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Usuario", //El ref señala donde obtiene la referencia ObjectId
     },
+
+    tareas: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tarea",
+      },
+    ],
+
     //Colaboradores es una arreglo de objetos ya que pueden existir varios
     colaboradores: [
       {
