@@ -3,7 +3,10 @@ import Tarea from "../models/Tarea.js";
 
 //Obtener todos los proyectos de un usuario Proyectos
 const obtenerProyectos = async (req, res) => {
-  const proyectos = await Proyecto.find().where("creador").equals(req.usuario);
+  const proyectos = await Proyecto.find()
+    .where("creador")
+    .equals(req.usuario)
+    .select("-tareas"); // Utilizando el .select("-tareas") estamos seleccionando todos los proyectos pero in la informacion de las tareas
 
   console.log(proyectos);
   res.json(proyectos);
@@ -29,7 +32,7 @@ const nuevoProyecto = async (req, res) => {
 const obtenerProyecto = async (req, res) => {
   const { id } = req.params; //Accediendo al routing dinamico
 
-  const proyecto = await Proyecto.findById(id);
+  const proyecto = await Proyecto.findById(id).populate("tareas"); // Utilizamos el populate para obtener del objeto "tareas toda la informacion"
   if (!proyecto) {
     const error = new Error("Proyecto no encontrado!");
     return res.status(404).json({ msg: error.message });

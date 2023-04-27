@@ -11,6 +11,7 @@ const ProyectosProvider = ({ children }) => {
   const [proyecto, setProyecto] = useState({});
   const [cargando, setCargando] = useState(false);
   const [modalFormularioTarea, setmodalFormularioTarea] = useState(false);
+  const [tarea, setTarea] = useState({});
 
   const navigate = useNavigate();
 
@@ -174,6 +175,7 @@ const ProyectosProvider = ({ children }) => {
   //Mostrar Modal para el Formulario Tarea
   const handleModalTarea = () => {
     setmodalFormularioTarea(!modalFormularioTarea);
+    setTarea({});
   };
 
   //Submit nueva tarea
@@ -191,9 +193,22 @@ const ProyectosProvider = ({ children }) => {
 
       const { data } = await clienteAxios.post("/tareas", tarea, config);
       console.log(data);
+
+      //Agrega la tarea al state
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = [...proyecto.tareas, data];
+      setProyecto(proyectoActualizado);
+      setAlerta({});
+      setmodalFormularioTarea(false);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //Modal Editar Tarea
+  const handleModalEditarTarea = (tarea) => {
+    setTarea(tarea);
+    setmodalFormularioTarea(true);
   };
 
   return (
@@ -210,6 +225,8 @@ const ProyectosProvider = ({ children }) => {
         modalFormularioTarea,
         handleModalTarea,
         submitTarea,
+        handleModalEditarTarea,
+        tarea,
       }}
     >
       {children}
