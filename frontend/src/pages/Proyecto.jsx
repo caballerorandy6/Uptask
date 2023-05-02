@@ -4,6 +4,7 @@ import useProyectos from "../hooks/useProyectos";
 import Pencil from "../components/Pencil";
 import Plus from "../components/Plus";
 import ModalFormularioTarea from "../components/ModalFormularioTarea";
+import ModalEliminarTarea from "../components/ModalEliminarTarea";
 import Tarea from "../components/Tarea";
 
 const Proyecto = () => {
@@ -61,6 +62,7 @@ const Proyecto = () => {
       </div>
 
       <ModalFormularioTarea />
+      <ModalEliminarTarea />
     </>
   );
 };
